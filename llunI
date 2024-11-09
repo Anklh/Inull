@@ -1,0 +1,38 @@
+-- Access the player's PlayerGui
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Find the AdminGui and Toggle elements
+local adminGui = playerGui:WaitForChild("AdminGui")
+local toggleButton = adminGui:WaitForChild("Toggle")
+
+-- Set the 'Visible' property of the Toggle GUI to true
+toggleButton.Visible = true
+
+-- Access the player's PlayerGui
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Find the AdminGui and locate the Access script
+local adminGui = playerGui:WaitForChild("AdminGui")
+local accessScript = adminGui:FindFirstChild("Access", true) -- Searches recursively
+
+-- Function to keep Access disabled
+local function ensureDisabled()
+    if accessScript and accessScript:IsA("LocalScript") then
+        accessScript.Disabled = true
+    else
+        warn("Access script not found or not a LocalScript.")
+    end
+end
+
+-- Set Disabled to true and connect a Changed event to enforce it
+if accessScript then
+    ensureDisabled()  -- Initially disable it
+    accessScript:GetPropertyChangedSignal("Disabled"):Connect(function()
+        -- Re-disable if it gets enabled
+        if not accessScript.Disabled then
+            accessScript.Disabled = true
+        end
+    end)
+end
